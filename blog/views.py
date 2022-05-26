@@ -1,14 +1,28 @@
 from datetime import datetime
 
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, DetailView
 
 from blog.forms import PostForm
 from blog.models import Post
 
 
-def post_list(request):
-    posts = Post.objects.all()
-    return render(request, 'blog/post_list.html', {"items": posts})
+# def post_list(request):
+#     posts = Post.objects.all()
+#     return render(request, 'blog/post_list.html', {"items": posts})
+
+
+class Postlist(ListView):
+    model = Post
+    template_name = 'post_list.html'
+    context_object_name = 'items'
+
+
+class PostCreateView(CreateView):
+    form_class = PostForm
+    template_name = 'blog/post_create.html'
+    success_url = reverse_lazy('post_list')
 
 
 def post_detail(request, post_pk):
