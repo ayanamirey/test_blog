@@ -18,10 +18,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="{% url 'post_list' %}">Home</a>
-                <a class="nav-link" href="{% url 'post_create' %}">Create new post</a>
-                <a class="nav-link" href="#">Pricing</a>
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                {% url 'post_list' as url_post_list %}
+                <a class="nav-link {% if url_post_list == request.path %}active{% endif %}" aria-current="page"
+                   href="{{url_post_list}}">Главная</a>
+                {% url 'post_create' as url_post_create %}
+                <a class="nav-link {% if url_post_create == request.path %}active{% endif %}"
+                   href="{{url_post_create}}">Создать новый пост</a>
+
+                {% if request.user.is_authenticated %}
+                {% url 'logout_page' as url_logout_page %}
+                <a style="margin-left: 10px" class="nav-link btn btn-danger" href="{{url_logout_page}}">Выйти</a>
+
+                {% else %}
+                {% url 'login_page' as url_login_page %}
+                <a class="nav-link {% if url_login_page == request.path %}active{% endif %}" href="{{url_login_page}}">Авторизация</a>
+                {% url 'register_page' as url_register_page %}
+                <a class="nav-link {% if url_register_page == request.path %}active{% endif %}"
+                   href="{{url_register_page}}">Регистрация</a>
+
+                {% endif %}
+            </div>
+            <div style="margin-left: auto">
+                {{request.user}}
             </div>
         </div>
     </div>
