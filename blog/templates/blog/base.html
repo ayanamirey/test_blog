@@ -7,7 +7,7 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-
+<!--Навигация-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="{% url 'post_list' %}">Logo</a>
@@ -17,39 +17,37 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link active" aria-current="page" href="{% url 'post_list' %}">Home</a>
-                <a class="nav-link" href="#">Features</a>
-                <a class="nav-link" href="#">Pricing</a>
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                {% url 'post_list' as url_post_list %}
+                <a class="nav-link {% if url_post_list == request.path %}active{% endif %}" aria-current="page"
+                   href="{{url_post_list}}">Главная</a>
+                {% url 'post_create' as url_post_create %}
+                <a class="nav-link {% if url_post_create == request.path %}active{% endif %}"
+                   href="{{url_post_create}}">Создать новый пост</a>
+
+                {% if request.user.is_authenticated %}
+                {% url 'logout_page' as url_logout_page %}
+                <a style="margin-left: 10px" class="nav-link btn btn-danger" href="{{url_logout_page}}">Выйти</a>
+
+                {% else %}
+                {% url 'login_page' as url_login_page %}
+                <a class="nav-link {% if url_login_page == request.path %}active{% endif %}" href="{{url_login_page}}">Авторизация</a>
+                {% url 'register_page' as url_register_page %}
+                <a class="nav-link {% if url_register_page == request.path %}active{% endif %}"
+                   href="{{url_register_page}}">Регистрация</a>
+
+                {% endif %}
+            </div>
+            <div style="margin-left: auto">
+                {{request.user}}
             </div>
         </div>
     </div>
 </nav>
 
 <div class="container">
-    <div class="row">
-        {% for post in items %}
-
-        <div class="card col-4" style="margin: 20px; padding: 15px">
-            <a href="{% url 'post_detail' post_pk=post.pk %}">
-                <h3 class="title" style="text-align: center">
-                    {{ post.title }}
-                </h3>
-                <p class="text" style="margin-bottom: auto">
-                    {{ post.text }}
-                </p>
-                <p class="published_date" style="text-align: end; margin: 15px 0 5px 0">
-                    {{ post.published_date }}
-                </p>
-            </a>
-        </div>
-
-        {% endfor %}
-    </div>
+    {% block content %}
+    {% endblock %}
 </div>
-
-</body>
-</html>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
         integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
@@ -57,3 +55,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
+
+</body>
+</html>
+
