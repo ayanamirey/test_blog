@@ -14,7 +14,7 @@
        style="text-decoration: none;margin: 5px;font-size: 15px; border-radius: 20px; padding: 10px 15px;">
         Удалить
     </a>
-    <a class="btn btn-primary" href="{% url 'post_edit' post_pk=post.pk %}"
+    <a class="btn btn-primary" href="{% url 'post_edit' pk=post.pk %}"
        style="text-decoration: none;margin: 5px;font-size: 15px; border-radius: 20px; padding: 10px 15px;">
         Редактировать
     </a>
@@ -25,7 +25,7 @@
         {{ post.title }}
     </h3>
     <p class="published_date" style="text-align: center; margin: 15px 0 5px 0">
-        {{ post.published_date }}
+        {{ post.published_date|date:'d.m.Y' }} - {{post.author}}
     </p>
     <p class="text" style="margin-bottom: auto">
         {{ post.text }}

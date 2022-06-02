@@ -9,6 +9,7 @@ from blog.models import Post
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import User
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # def post_list(request):
@@ -22,15 +23,20 @@ class Postlist(ListView):
     context_object_name = 'items'
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
+    login_url = reverse_lazy('login_page')
+    model = Post
     form_class = PostForm
     template_name = 'blog/post_create.html'
     success_url = reverse_lazy('post_list')
 
 
-def post_detail(request, post_pk):
-    post = Post.objects.get(pk=post_pk)
-    return render(request, 'blog/post_detail.html', {'post': post})
+class PostDetailView(DetailView):
+    model = Post
+
+    def get_context_data(self, request, post_pk):
+        post = Post.objects.get(pk=post_pk)
+        return render(request, 'blog/post_detail.html', {"post": post})
 
 
 def post_edit(request, post_pk):
@@ -46,6 +52,17 @@ def post_edit(request, post_pk):
             post.published_date = datetime.now()
             post.save()
             return redirect('post_detail', post_pk=post.pk)
+
+
+# class PostUpdateView(UpdateView):
+#     models = Post
+#     form_class = PostForm
+#     template_name = 'blog/post_edit.html'
+#     success_url = reverse_lazy('post_list')
+#
+#     def get_context_data(self, **kwargs):
+#         kwargs['post_pk'] = Post.objects.get(pk)
+#         return super().get_context_data(++kwargs)
 
 
 def post_delete(request, post_pk):
@@ -75,7 +92,6 @@ class RegisterUserView(CreateView):
         auth_user = authenticate(username=username, password=password)
         login(self.request, auth_user)
         return form_valid
-
 
 
 class MyProjectLogoutView(LogoutView):

@@ -17,10 +17,16 @@
         <p class="text" style="margin-bottom: auto">
             {{ post.text }}
         </p>
-        <p class="published_date" style="text-align: end; margin: 15px 0 5px 0">
-            {{ post.published_date }}
-        </p>
+        <div style="display: flex; justify-content: space-between; align-items: center;margin: 15px 0 5px 0">
+            <p>
+                Author: {{post.author}}
+            </p>
+            <p class="published_date">
+                {{ post.published_date }}
+            </p>
+        </div>
     </div>
+
 
     {% endfor %}
 </div>
